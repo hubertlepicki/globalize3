@@ -25,7 +25,6 @@ module Globalize
 
         def create_translation_table!(fields = {}, options = {})
           @fields = fields
-          complete_translated_fields
           validate_translated_fields
 
           create_translation_table
@@ -44,12 +43,6 @@ module Globalize
           move_data_to_model_table if options[:migrate_data]
           drop_translations_index
           drop_translation_table
-        end
-
-        def complete_translated_fields
-          translated_attribute_names.each do |name|
-            fields[name] = column_type(name) unless fields[name]
-          end
         end
 
         def create_translation_table
