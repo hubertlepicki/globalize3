@@ -25,7 +25,6 @@ module Globalize
 
         def create_translation_table!(fields = {}, options = {})
           @fields = fields
-          validate_translated_fields
 
           create_translation_table
           move_data_to_translation_table if options[:migrate_data]
@@ -112,23 +111,8 @@ module Globalize
           end
         end
 
-        def validate_translated_fields
-          fields.each do |name, type|
-            raise BadFieldName.new(name) unless valid_field_name?(name)
-            raise BadFieldType.new(name, type) unless valid_field_type?(name, type)
-          end
-        end
-
         def column_type(name)
           columns.detect { |c| c.name == name.to_s }.try(:type)
-        end
-
-        def valid_field_name?(name)
-          translated_attribute_names.include?(name)
-        end
-
-        def valid_field_type?(name, type)
-          !translated_attribute_names.include?(name) || [:string, :text].include?(type)
         end
 
         def translation_index_name
